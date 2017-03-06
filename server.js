@@ -38,6 +38,11 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());//
 app.use(passport.session());//
+//Fixing some codes Part1 8.08'
+app.use(function(req,res,next){
+    res.locals.user = req.user;
+    next();
+});
 
 app.engine('ejs',ejs_mate);
 app.set('view engine','ejs');

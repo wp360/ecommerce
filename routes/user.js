@@ -50,6 +50,12 @@ router.post('/signup',function(req,res,next){
     });
 });
 
+//Fixing some codes Part1 退出登录
+router.get('/logout',function(req,res,next){
+    req.logout();
+    res.redirect('/');
+});
+
 module.exports = router;
 
 //说明：创建了一个Router实例，然后调用router.post为“/signup”路径应用了路由函数。最后使用module.exports将Router对象导出。
