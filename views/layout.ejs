@@ -2,18 +2,14 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8">
-    <title>Jumbotron Template for Bootstrap</title>
+    <title>NodeJS 搭建网上购物商城</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
   </head>
-
   <body>
     <% include ./partials/navbar %>
-    <div class="container">
-      <%- body -%>
-    </div> <!-- /container -->
+    <%- body -%>
     <% include ./partials/footer %>
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
+    <% include ./partials/javascriptOnly %>
   </body>
 </html>
