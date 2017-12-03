@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 // 定义加密密码计算强度 
 var SALT_WORK_FACTOR = 10;
+//crypto模块提供了一种封装安全证书的方法，用来作为安全 HTTPS 网络和 HTTP 链接的一部分。
 var crypto = require('crypto');
 // 定义用户模式
 var Schema = mongoose.Schema;
@@ -47,14 +48,16 @@ UserSchema.methods.comparePassword = function(password){
 //Fixing some codes Part 2 密码核对
 UserSchema.methods.comparePassword = function(password){
     return bcrypt.compareSync(password,this.password);
-}
+};
+
 //头像图片尺寸
 UserSchema.methods.gravatar = function(size){
     if (!this.size) size = 200;
     if (!this.email) return 'https://gravatar.com/avatar/?s' + size + '&d=retro';
+    // MD5 16进制加密
     var md5 = crypto.createHash('md5').update(this.email).digest('hex');
-    return 'https://gravatar.com/avatar' + md5 + '?s=' + size + '&d=retro';
-}
+    return 'https://gravatar.com/avatar/' + md5 + '?s=' + size + '&d=retro';
+};
 
 module.exports = mongoose.model('User',UserSchema);
 

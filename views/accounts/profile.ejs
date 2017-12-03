@@ -4,11 +4,16 @@
     <!--<h1><%= user.profile.name %></h1>欢迎您！-->
     <div class="row">
         <div class="col-sm-6 col-md-4">
-            <img class="img-cicle imgrespomsive img-center" src="<%= user.profile.picture %>" alt="">
+            <img class="img-cicle img-respomsive img-center" src="<%= user.profile.picture %>" alt="个人头像">
             <br />
             <p>姓名：<%= user.profile.name %></p>
             <p>邮箱：<%= user.email %></p>
-            <p>地址：<%= user.address %></p>
+            <% if (user.address === '' || typeof user.address === 'undefinded') { %>
+                <p>地址：<span style="color:#c0392b;font-weight:bold">地址未填写</span></p>    
+            <% } else { %>
+                <p>地址：<%= user.address %></p>
+            <% } %>
+            <a href="/edit-profile" class="btn btn-primary btn-lg">编辑个人信息</a>
         </div>
     </div>
 </div>

@@ -1,14 +1,14 @@
 var express = require('express');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');// 解析body字段模块
 var ejs = require('ejs');
 var ejs_mate = require('ejs-mate');
 var session = require('express-session');
-var cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser');//加载解析cookie的中间件
 var flash = require('express-flash');
-var MongoStore = require('connect-mongo')(session); //connect-mongo/es5
-var passport = require('passport');
+var MongoStore = require('connect-mongo/es5')(session); //connect-mongo
+var passport = require('passport');// 用户认证模块passport
 
 var secret = require('./config/secret');
 var User = require('./models/user');
@@ -24,21 +24,24 @@ mongoose.connect(secret.datebase,function(err){
 });
 
 //Middleware
-app.use(express.static(__dirname + '/public'));
-app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));//通过Express内置的express.static可以方便地托管静态文件，例如图片、CSS、JavaScript 文件等。
+app.use(morgan('dev'));// 命令行中显示程序运行日志,便于bug调试
+app.use(bodyParser.json());// 调用bodyParser模块以便程序正确解析body传入值
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(session({
     resave: true,// 即使 session 没有被修改，也保存 session 值，默认为 true。
     saveUninitialized: true,//强制没有“初始化”的session保存到storage中
     secret: secret.secretKey,//通过设置的 secret 字符串，来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改。"Bob@$@!#@"
-    store: new MongoStore({url:secret.datebase,autoReconnect:true})
+    store: new MongoStore({
+        url: secret.datebase,
+        autoReconnect: true
+    }) //autoReconnect 当数据库连接异常中断时，是否自动重新连接
 }));
 app.use(flash());
-app.use(passport.initialize());//
-app.use(passport.session());//
-//Fixing some codes Part1 8.08'
+app.use(passport.initialize());// 初始化passport模块
+app.use(passport.session());
+
 app.use(function(req,res,next){
     res.locals.user = req.user;
     next();
@@ -92,4 +95,3 @@ app.get('/',function(req,res){
 });
 
 */
-
