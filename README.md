@@ -266,6 +266,71 @@ function(req, res) {
 2. req.flash的介绍：通过它保存的变量生命周期是用户当前和下一次请求，之后会被清除。
 新版本的express取消了req.flash,建议直接使用req.session，但貌似在ejs中无法直接操作session的。
 
+# 【第三章】
+## 商品分类
+### 开发步骤
+1. 新增商品（models/product.js）及分类模型（models/category.js）
+2. 路由生成（routes/admin.js）
+3. 服务对接（server.js）
+```js
+var adminRoutes = require('./routes/admin');
+...省略
+app.use(adminRoutes);
+```
+4. 模板内容（partials/navbar.ejs）
+```html
+    <!-- 商品分类 -->
+    <li>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">商品分类</a>
+        <ul class="dropdown-menu">
+            <% for(var i=0;i<categories.length;i++) { %>
+                <li><a><%= castegories[i].name %></a></li>
+            <% } %>
+        </ul>
+    </li>
+```
+5. 用户路由（routes/main.js）
+```js
+var User = require('../models/user');
+...省略
+router.get('/users', function (req, res) {
+    userInfo.find({},function(err,user){
+        res.json(users);
+    });
+});
+```
+## asyncjs，waterfall的使用
+> waterfall(tasks, [callback]) （多个函数依次执行，且前一个的输出为后一个的输入）
+> 按顺序依次执行多个函数。每一个函数产生的值，都将传给下一个函数。如果中途出错，后面的函数将不会被执行。错误信息以及之前产生的结果，将传给waterfall最终的callback。
+注：现在大多已经用promise和generator语法了
+## Faker API
+`npm install faker async --save`
+
+新建api文件夹，生成api.js，server.js加载处理请求的路由模块。
+```js
+var apiRoutes = require('./api/api');
+//...省略
+app.use('/api',apiRoutes);
+//注：app.use 不是来处理请求的, 而是来加载处理请求的路由模块的参数。
+```
+
+## Mongoosastic
+```js
+var mongoose     = require('mongoose')
+  , mongoosastic = require('mongoosastic')
+  , Schema       = mongoose.Schema
+
+var User = new Schema({
+    name: String
+  , email: String
+  , city: String
+})
+
+User.plugin(mongoosastic)
+```
+[Mongoosastic说明文档](https://github.com/mongoosastic/mongoosastic/)
+[Elasticsearch: 权威指南](https://www.elastic.co/guide/cn/elasticsearch/guide/current/index.html)
+
 ## 备注：
 [参考源码](https://github.com/nattafahhm/node_e-commerce)
 [nodeJS---express4+passport实现用户注册登录验证](http://www.cnblogs.com/y-yxh/p/5859937.html)

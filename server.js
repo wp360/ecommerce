@@ -12,6 +12,8 @@ var passport = require('passport');// 用户认证模块passport
 
 var secret = require('./config/secret');
 var User = require('./models/user');
+//分类
+var Category = require('./models/category');
 
 var app = express();
 //'mongodb://root:123456@ds161209.mlab.com:61209/ecommerces'
@@ -46,6 +48,14 @@ app.use(function(req,res,next){
     res.locals.user = req.user;
     next();
 });
+// 分类查询
+app.use(function(req,res,next){
+    Category.find({},function(err,categories){
+        if (err) return next(err);
+        res.locals.categories = categories;
+        next();
+    });
+});
 
 app.engine('ejs',ejs_mate);
 app.set('view engine','ejs');
@@ -68,9 +78,13 @@ app.post('/create-user',function(req,res,next){
 /*route移除后新增*/
 var mainRoutes = require('./routes/main');
 var userRoutes = require('./routes/user');
+var adminRoutes = require('./routes/admin');
+var apiRoutes = require('./api/api');
 
 app.use(mainRoutes);
 app.use(userRoutes);
+app.use(adminRoutes);
+app.use('/api',apiRoutes);
 
 /* 迁移至routes/main.js
 app.get('/',function(req,res){

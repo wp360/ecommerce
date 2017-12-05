@@ -8,7 +8,7 @@
             <br />
             <p>姓名：<%= user.profile.name %></p>
             <p>邮箱：<%= user.email %></p>
-            <% if (user.address === '' || typeof user.address === 'undefinded') { %>
+            <% if (user.address === '' || typeof user.address === 'undefined') { %>
                 <p>地址：<span style="color:#c0392b;font-weight:bold">地址未填写</span></p>    
             <% } else { %>
                 <p>地址：<%= user.address %></p>
