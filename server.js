@@ -7,7 +7,7 @@ var ejs_mate = require('ejs-mate');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');//加载解析cookie的中间件
 var flash = require('express-flash');
-var MongoStore = require('connect-mongo/es5')(session); //connect-mongo
+var MongoStore = require('connect-mongo')(session); //connect-mongo/es5
 var passport = require('passport');// 用户认证模块passport
 
 var secret = require('./config/secret');
@@ -16,6 +16,7 @@ var User = require('./models/user');
 var Category = require('./models/category');
 
 var app = express();
+mongoose.Promise = global.Promise;
 //'mongodb://root:123456@ds161209.mlab.com:61209/ecommerces'
 mongoose.connect(secret.datebase,function(err){
     if(err){

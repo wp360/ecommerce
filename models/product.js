@@ -1,18 +1,15 @@
 var mongoose = require('mongoose');
 var mongoosastic = require('mongoosastic');
 var Schema = mongoose.Schema;
-
+//关联Category表的_id
 var ProductSchema = new Schema({
-    categroy: {
-        type: Schema.Types.ObjectId,
-        ref: 'Categroy' ////关联Category表的_id
-    },
+    category: { type: Schema.Types.ObjectId, ref: 'Category' },
     name: String,
     price: Number,
     image: String
 });
 
-ProductSchema.plugin(mongoosastic,{
+ProductSchema.plugin(mongoosastic, {
     hosts: [
         'localhost:9200'
     ]

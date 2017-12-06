@@ -1,6 +1,27 @@
 var router = require('express').Router();
 var User = require('../models/user');
+var Category = require('../models/category');
 var Product = require('../models/product');
+//分页
+function paginate(req,res,next){
+    var perPage = 9;
+    var page = req.params.page;
+    Product.find()
+    .skip(perPage * page)
+    .limit(perPage)
+    .populate('category')
+    .exec(function (err, products) {
+        if (err) return next(err);
+        Product.count().exec(function (err, count) {
+            if (err) return next(err);
+            res.render('main/product-main', {
+                products: products,
+                pages: count / perPage
+            });
+        });
+    });
+}
+
 //映射
 Product.createMapping(function(err,mapping){
     if(err){
@@ -16,11 +37,11 @@ var stream = Product.synchronize();//同步
 var count = 0;
 
 stream.on('data',function(){
-    count ++;
+    count++;
 });
 
 stream.on('close', function () {
-    console.log("Indexed"+count+"documents");
+    console.log("Indexed" + count + "documents");
 });
 
 stream.on('error', function (err) {
@@ -33,10 +54,10 @@ router.post('/search',function(req,res,next){
 
 router.get('/search', function (req, res, next) {
     if(req.query.q){
-        Product.geoSearch({
+        Product.search({
             query_string: {query: req.query.q}
         },function(err,results){
-            if(err) return next(err);
+            results: if(err) return next(err);
             var data = results.hits.hits.map(function(hit){
                 return hit;
             });
@@ -48,8 +69,16 @@ router.get('/search', function (req, res, next) {
     }
 });
 
-router.get('/',function(req,res){
-    res.render('main/home');
+router.get('/',function(req,res,next){
+    if(req.user){
+        paginate(req, res, next);
+    }else{
+        res.render('main/home');
+    }
+});
+
+router.get('/page/:page',function(req,res,next){
+    paginate(req,res,next);
 });
 
 router.get('/about',function(req,res){
@@ -66,7 +95,7 @@ router.get('/users', function (req, res) {
 
 router.get('/products/:id',function(req,res,next){
     Product
-    .find({categroy: req.params.id})
+    .find({category: req.params.id})
     .populate('category')
     .exec(function(err,products){
         if(err) return next(err);
